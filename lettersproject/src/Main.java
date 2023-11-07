@@ -31,12 +31,12 @@ public class Main
         System.out.print("\033c");
 
         ArrayList<String> myWords = new ArrayList<>();
-        ArrayList<String> explanations = new ArrayList<>();
+        ArrayList<String> explanations = new ArrayList<>(); //add later
 
         myWords.add("silver");
         myWords.add("smurf");
         myWords.add("bottle");
-        myWords.add("america");
+        myWords.add("poland");
         myWords.add("poetry");
         myWords.add("achievement");
         myWords.add("ecology");
@@ -46,23 +46,25 @@ public class Main
         explanations.add("metal");
         explanations.add("blue creature");
         explanations.add("used to store drinks");
-        explanations.add("obama");
+        explanations.add("warsaw");
         explanations.add("something");
-        explanations.add("gold on frankfurt lobby");
+        explanations.add("deleted valorant"); //for Wonker propaganda material hi Wonker
         explanations.add("green");
         explanations.add("money");
         explanations.add("obama");
         explanations.add("drink");
 
         int[] leaderboard = new int[playerNumber];
+        int[] oneRoundScore = new int[playerNumber];
 
         int n = 0;
 
         boolean keepGoing = true;
-        for (String myWord : myWords) {
-            char[] currentWord = myWord.toCharArray();
+        for (int i = 0; i < myWords.size(); i++) { //remove enhanced for loop and swiTCH ALL MYWORD TO MYWORDS.GET(I);
+            char[] currentWord = myWords.get(i).toCharArray(); //change back to normal for loop with i and add explkANtriaons
             char[] currentWordHidden = new char[currentWord.length];
             System.out.println("Guess the letter or the entire word");
+            System.out.println("Hint: " + explanations.get(i)); //remove enhanced for loop
             for (int k = 0; k < currentWord.length; k++) {
                 currentWordHidden[k] = '_';
                 System.out.print(currentWordHidden[k] + " ");
@@ -81,8 +83,9 @@ public class Main
                     String playerGuess = scanner.nextLine();
                     System.out.print("\033c");
                     System.out.println("Guess the letter or the entire word");
+                    System.out.println("Hint: " + explanations.get(i)); //remove enhanced for loop
                     if (playerGuess.length() == 1) {
-                        while (myWord.contains(playerGuess) && playerGuess.length() == 1) {
+                        while (myWords.get(i).contains(playerGuess) && playerGuess.length() == 1) {
                             for (int p = 0; p < currentWord.length; p++) {//hide letters
                                 if (playerGuess.charAt(0) == (currentWord[p])) {
                                     currentWordHidden[p] = currentWord[p];
@@ -92,11 +95,12 @@ public class Main
                             System.out.println();
                             System.out.println("Correct guess.");
                             playerPoints += 100;
+                            oneRoundScore[l] += playerPoints;
                             leaderboard[l] += playerPoints;
-                            if (!(playerPoints > myWord.length() * 100 / 2)) {
+                            if (!(oneRoundScore[l] > myWords.get(i).length() * 100 / 2)) {
                                 System.out.println("Player " + turns.get(l) + " gets another attempt");
                             }
-                            if (playerPoints > myWord.length() * 100 / 2) {
+                            if (oneRoundScore[l] > myWords.get(i).length() * 100 / 2) {
                                 playerPoints = 0;
                                 int o = l;
                                 for (int m = 1; m < z; m++) {
@@ -111,8 +115,9 @@ public class Main
                                     playerGuess = scanner.nextLine();
                                     System.out.print("\033c");
                                     System.out.println("Guess the letter or the entire word");
-                                    if (playerGuess.equalsIgnoreCase(myWord)) {
-                                        playerPoints += 100 * myWord.length();
+                                    System.out.println("Hint: " + explanations.get(i)); //remove enhanced for loop
+                                    if (playerGuess.equalsIgnoreCase(myWords.get(i))) {
+                                        playerPoints += 100 * myWords.get(i).length();
                                         leaderboard[m] += playerPoints;
                                         for (int p = 0; p < currentWord.length; p++) {//hide letters
                                             System.out.print(playerGuess.charAt(p) + " ");
@@ -125,6 +130,9 @@ public class Main
                                         keepGoing = false;
                                         playerPoints = 0;
                                         l += z;
+                                        for (int v = 0; v < playerNumber; v++) {
+                                            oneRoundScore[v] = 0;
+                                        }
                                         break;
                                     }
                                     else {
@@ -142,6 +150,9 @@ public class Main
                                         System.out.println("Press any key to get a new word");
                                         scanner.nextLine();
                                         System.out.print("\033c");
+                                        for (int v = 0; v < playerNumber; v++) {
+                                            oneRoundScore[v] = 0;
+                                        }
                                         keepGoing = false;
                                         l += z;
                                         break;
@@ -151,12 +162,14 @@ public class Main
                                 l += z;
                                 break;
                             }
+                            playerPoints = 0;
                             playerGuess = scanner.nextLine();
                             System.out.print("\033c");
                             System.out.println("Guess the letter or the entire word");
+                            System.out.println("Hint: " + explanations.get(i)); //remove enhanced for loop
                             if (playerGuess.length() > 1) {
-                                if (playerGuess.equalsIgnoreCase(myWord)) {
-                                    playerPoints += 100 * myWord.length();
+                                if (playerGuess.equalsIgnoreCase(myWords.get(i))) {
+                                    playerPoints += 100 * myWords.get(i).length();
                                     leaderboard[l] += playerPoints;
                                     for (int p = 0; p < currentWord.length; p++) {//hide letters
                                         System.out.print(playerGuess.charAt(p) + " ");
@@ -167,6 +180,9 @@ public class Main
                                     scanner.nextLine();
                                     System.out.print("\033c");
                                     keepGoing = false;
+                                    for (int v = 0; v < playerNumber; v++) {
+                                        oneRoundScore[v] = 0;
+                                    }
                                     playerPoints = 0;
                                     l += z;
                                 }
@@ -191,7 +207,7 @@ public class Main
                                 }
                             }
                         }
-                        if (!myWord.contains(playerGuess) && playerGuess.length() == 1) {
+                        if (!myWords.get(i).contains(playerGuess) && playerGuess.length() == 1) {
                             for (int p = 0; p < currentWord.length; p++) {//hide letters
                                 System.out.print(currentWordHidden[p] + " ");
                             }
@@ -206,8 +222,8 @@ public class Main
                         }
                     }
                     else {
-                        if (playerGuess.equalsIgnoreCase(myWord)) {
-                            playerPoints += 100 * myWord.length();
+                        if (playerGuess.equalsIgnoreCase(myWords.get(i))) {
+                            playerPoints += 100 * myWords.get(i).length();
                             leaderboard[l] += playerPoints;
                             for (int p = 0; p < currentWord.length; p++) {//hide letters
                                 System.out.print(playerGuess.charAt(p) + " ");
@@ -218,6 +234,9 @@ public class Main
                             scanner.nextLine();
                             System.out.print("\033c");
                             keepGoing = false;
+                            for (int v = 0; v < playerNumber; v++) {
+                                oneRoundScore[v] = 0;
+                            }
                             playerPoints = 0;
                             break;
                         }
@@ -244,7 +263,7 @@ public class Main
             }
             keepGoing = true;
         }
-        System.out.println("Game finished. Leaderboard:");
+        System.out.println("Game finished. No more words for you! Leaderboard:");
         for (int i = 0; i < leaderboard.length; i++) {
             System.out.println(names.get(i) + ": " + leaderboard[i] + " pts");
         }
