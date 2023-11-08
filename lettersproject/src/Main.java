@@ -7,11 +7,16 @@ public class Main
         Scanner scanner = new Scanner(System.in);
         Random random = new Random();
 
-        System.out.println("Enter number of players");
+        printHelloCat();
+        System.out.println("*********************************************");
+        System.out.println("*          Enter number of players          *");
+        System.out.println("*********************************************");
         int playerNumber = scanner.nextInt();
         ArrayList<String> names = new ArrayList<>();
-
-        System.out.println("Enter your names");
+        System.out.print("\033c");
+        System.out.println("**********************");
+        System.out.println("*  Enter your names  *");
+        System.out.println("**********************");
         scanner.nextLine();
         for (int i = 0; i < playerNumber; i++) {
             names.add(scanner.nextLine());
@@ -26,6 +31,7 @@ public class Main
         for (int i = 0; i < playerNumber; i++) {
             System.out.println(names.get(i));
         }
+        printPlayerCats();
         System.out.println("Enter any key to continue");
         scanner.nextLine();
         System.out.print("\033c");
@@ -47,7 +53,7 @@ public class Main
         explanations.add("blue creature");
         explanations.add("used to store drinks");
         explanations.add("warsaw");
-        explanations.add("something");
+        explanations.add("literature");
         explanations.add("deleted valorant"); //for Wonker propaganda material hi Wonker
         explanations.add("green");
         explanations.add("money");
@@ -57,13 +63,11 @@ public class Main
         int[] leaderboard = new int[playerNumber];
         int[] oneRoundScore = new int[playerNumber];
 
-        int n = 0;
-
         boolean keepGoing = true;
         for (int i = 0; i < myWords.size(); i++) { //remove enhanced for loop and swiTCH ALL MYWORD TO MYWORDS.GET(I);
             char[] currentWord = myWords.get(i).toCharArray(); //change back to normal for loop with i and add explkANtriaons
             char[] currentWordHidden = new char[currentWord.length];
-            System.out.println("Guess the letter or the entire word");
+            printInstructions();
             System.out.println("Hint: " + explanations.get(i)); //remove enhanced for loop
             for (int k = 0; k < currentWord.length; k++) {
                 currentWordHidden[k] = '_';
@@ -78,22 +82,18 @@ public class Main
             }
             int z = turns.size();
             System.out.println(turns.get(0) + "'s turn to play.");
+            printTurnsKitten();
             while (keepGoing) {
                 for (int l = 0; l < z; l++) { //change to turns size because of eliminations
                     String playerGuess = scanner.nextLine();
                     System.out.print("\033c");
-                    System.out.println("Guess the letter or the entire word");
+                    printInstructions();
                     System.out.println("Hint: " + explanations.get(i)); //remove enhanced for loop
                     if (playerGuess.length() == 1) {
                         while (myWords.get(i).contains(playerGuess) && playerGuess.length() == 1) {
-                            for (int p = 0; p < currentWord.length; p++) {//hide letters
-                                if (playerGuess.charAt(0) == (currentWord[p])) {
-                                    currentWordHidden[p] = currentWord[p];
-                                }
-                                System.out.print(currentWordHidden[p] + " ");
-                            }
-                            System.out.println();
+                            unhideLetters(currentWord, currentWordHidden, playerGuess);
                             System.out.println("Correct guess.");
+                            printTurnsKitten();
                             playerPoints += 100;
                             oneRoundScore[l] += playerPoints;
                             leaderboard[l] += playerPoints;
@@ -114,20 +114,17 @@ public class Main
                                     }
                                     playerGuess = scanner.nextLine();
                                     System.out.print("\033c");
-                                    System.out.println("Guess the letter or the entire word");
+                                    printInstructions();
                                     System.out.println("Hint: " + explanations.get(i)); //remove enhanced for loop
                                     if (playerGuess.equalsIgnoreCase(myWords.get(i))) {
                                         playerPoints += 100 * myWords.get(i).length();
                                         leaderboard[m] += playerPoints;
-                                        for (int p = 0; p < currentWord.length; p++) {//hide letters
-                                            System.out.print(playerGuess.charAt(p) + " ");
-                                        }
-                                        System.out.println();
+                                        unhideWord(currentWord);
                                         System.out.println("Congratulations! Player " + turns.get(l) + " won");
+                                        printWinnerCat();
                                         System.out.println("Press any key to get a new word");
                                         scanner.nextLine();
                                         System.out.print("\033c");
-                                        keepGoing = false;
                                         playerPoints = 0;
                                         l += z;
                                         for (int v = 0; v < playerNumber; v++) {
@@ -136,24 +133,23 @@ public class Main
                                         break;
                                     }
                                     else {
-                                        for (int p = 0; p < currentWord.length; p++) {//hide letters
-                                            if (playerGuess.charAt(0) == (currentWord[p])) {
-                                                currentWordHidden[p] = currentWord[p];
-                                            }
-                                            System.out.print(currentWordHidden[p] + " ");
-                                        }
-                                        System.out.println();
+                                        unhideLetters(currentWord, currentWordHidden, playerGuess);
                                         System.out.println("Wrong guess. " + turns.get(l) + " lost");
+                                        printLoserCat();
                                     }
                                     if (m == z - 1) {
+                                        System.out.print("\033c");
+                                        printInstructions();
+                                        System.out.println("Hint: " + explanations.get(i));
+                                        unhideWord(currentWord);
                                         System.out.println("Nobody has guessed right. " + turns.get(o) + " wins.");
+                                        printWinnerCat();
                                         System.out.println("Press any key to get a new word");
                                         scanner.nextLine();
                                         System.out.print("\033c");
                                         for (int v = 0; v < playerNumber; v++) {
                                             oneRoundScore[v] = 0;
                                         }
-                                        keepGoing = false;
                                         l += z;
                                         break;
                                     }
@@ -165,17 +161,15 @@ public class Main
                             playerPoints = 0;
                             playerGuess = scanner.nextLine();
                             System.out.print("\033c");
-                            System.out.println("Guess the letter or the entire word");
+                            printInstructions();
                             System.out.println("Hint: " + explanations.get(i)); //remove enhanced for loop
                             if (playerGuess.length() > 1) {
                                 if (playerGuess.equalsIgnoreCase(myWords.get(i))) {
                                     playerPoints += 100 * myWords.get(i).length();
                                     leaderboard[l] += playerPoints;
-                                    for (int p = 0; p < currentWord.length; p++) {//hide letters
-                                        System.out.print(playerGuess.charAt(p) + " ");
-                                    }
-                                    System.out.println();
+                                    unhideWord(currentWord);
                                     System.out.println("Congratulations! Player " + turns.get(l) + " won");
+                                    printWinnerCat();
                                     System.out.println("Press any key to get a new word");
                                     scanner.nextLine();
                                     System.out.print("\033c");
@@ -187,18 +181,17 @@ public class Main
                                     l += z;
                                 }
                                 else {
-                                    for (int p = 0; p < currentWord.length; p++) {//hide letters
-                                        System.out.print(currentWordHidden[p] + " ");
-                                    }
-                                    System.out.println();
+                                    unhideLetters(currentWord, currentWordHidden, playerGuess);
                                     if (l == z - 1) {
                                         System.out.println("Wrong guess. Player eliminated. Next turn: " + turns.get(0));
+                                        printLoserCat();
                                         turns.remove(l);
                                         l--;
                                         z--;
                                     }
                                     else {
                                         System.out.println("Wrong guess. Player eliminated. Next turn: player " + turns.get(l + 1)); //turns.get(l)
+                                        printLoserCat();
                                         turns.remove(l);
                                         l--;
                                         z--;
@@ -208,28 +201,23 @@ public class Main
                             }
                         }
                         if (!myWords.get(i).contains(playerGuess) && playerGuess.length() == 1) {
-                            for (int p = 0; p < currentWord.length; p++) {//hide letters
-                                System.out.print(currentWordHidden[p] + " ");
-                            }
-                            System.out.println();
+                            unhideLetters(currentWord, currentWordHidden, playerGuess);
                             if (l == z - 1) {
-
                                 System.out.println("Wrong. Next turn: " + turns.get(0));
                             }
                             else {
                                 System.out.println("Wrong guess. Next turn: " + turns.get(l + 1)); //turns.get(l)
                             }
+                            printTurnsKitten();
                         }
                     }
                     else {
                         if (playerGuess.equalsIgnoreCase(myWords.get(i))) {
                             playerPoints += 100 * myWords.get(i).length();
                             leaderboard[l] += playerPoints;
-                            for (int p = 0; p < currentWord.length; p++) {//hide letters
-                                System.out.print(playerGuess.charAt(p) + " ");
-                            }
-                            System.out.println();
-                            System.out.println("Congratulations! Player " + turns.get(l) + "won");
+                            unhideWord(currentWord);
+                            System.out.println("Congratulations! Player " + turns.get(l) + " won");
+                            printWinnerCat();
                             System.out.println("Press any key to get a new word");
                             scanner.nextLine();
                             System.out.print("\033c");
@@ -241,10 +229,7 @@ public class Main
                             break;
                         }
                         else {
-                            for (int p = 0; p < currentWord.length; p++) {//hide letters
-                                System.out.print(currentWordHidden[p] + " ");
-                            }
-                            System.out.println();
+                            unhideLetters(currentWord, currentWordHidden, playerGuess);
                             if (l == z - 1) {
                                 System.out.println("Wrong guess. Player eliminated. Next turn: " + turns.get(0));
                                 turns.remove(l);
@@ -257,6 +242,7 @@ public class Main
                                 l--;
                                 z--;
                             }
+                            printLoserCat();
                         }
                     }
                 }
@@ -267,5 +253,107 @@ public class Main
         for (int i = 0; i < leaderboard.length; i++) {
             System.out.println(names.get(i) + ": " + leaderboard[i] + " pts");
         }
+        printPlayerCats();
+    }
+    private static void unhideLetters(char[] currentWord, char[] currentWordHidden, String playerGuess) {
+        for (int p = 0; p < currentWord.length; p++) {//hide letters
+            if (playerGuess.charAt(0) == (currentWord[p])) {
+                currentWordHidden[p] = currentWord[p];
+            }
+            System.out.print(currentWordHidden[p] + " ");
+        }
+        System.out.println();
+    }
+    public static void unhideWord(char[] currentWord) {
+        for (char c : currentWord) {
+            System.out.print(c + " ");
+        }
+        System.out.println();
+    }
+
+    public static void printHelloCat() {
+        System.out.println("             *     ,MMM8&&&.            *");
+        System.out.println("                  MMMM88&&&&&    .");
+        System.out.println("                 MMMM88&&&&&&&");
+        System.out.println("     *           M    HI!    &");
+        System.out.println("                 MMM88&&&&&&&&");
+        System.out.println("                 'MMM88&&&&&&'");
+        System.out.println("                   'MMM8&&&'      *");
+        System.out.println("          |\\___/|");
+        System.out.println("          )     (             .              '");
+        System.out.println("         =\\     /=");
+        System.out.println("           )===(       *");
+        System.out.println("          /     \\");
+        System.out.println("          |     |");
+        System.out.println("         /       \\");
+        System.out.println("         \\       /");
+        System.out.println("  _/\\_/\\_/\\__  _/_/\\_/\\_/\\_/\\_/\\_/\\_/\\_/\\_/\\_");
+        System.out.println("  |  |  |  |( (  |  |  |  |  |  |  |  |  |  |");
+        System.out.println("  |  |  |  | ) ) |  |  |  |  |  |  |  |  |  |");
+        System.out.println("  |  |  |  |(_(  |  |  |  |  |  |  |  |  |  |");
+        System.out.println("  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |");
+        System.out.println("  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |");
+        System.out.println("*********************************************");
+    }
+    public static void printTurnsKitten() {
+        System.out.println("                        Cat: I'm watching you!");
+        System.out.println(" |____|____|____|____|____|____|____|____|____|____|____|____|____");
+        System.out.println(" ____|____|____|____|____|____|____|____|____|____|____|____|____|");
+        System.out.println(" __|____|____|____|____|___|_         ____|____|____|____|____|__");
+        System.out.println(" |____|____|____|____|___|    (\\.-./)  _|____|____|____|___|___|_ ");
+        System.out.println("____|____|____|____|____|_  = (^ Y ^) =  _|____|____|____|____|__");
+        System.out.println("|____|____|____|____|____|___ /`---`\\ __|____|____|____|____|____|");
+        System.out.println(" __|____|____|____|____|____|_U___|_U|____|____|____|____|____|_  ");
+        System.out.println(" |____|____|____|____|____|____|____|____|____|____|____|____|____");
+        System.out.println("____|____|____|____|____|____|____|____|____|____|____|____|____|_");
+    }
+    public static void printPlayerCats() {
+        System.out.println("                      /^--^\\     /^--^\\     /^--^\\");
+        System.out.println("                      \\____/     \\____/     \\____/");
+        System.out.println("                     /      \\   /      \\   /      \\");
+        System.out.println("                    |        | |        | |        |");
+        System.out.println("                     \\__  __/   \\__  __/   \\__  __/");
+        System.out.println("|^|^|^|^|^|^|^|^|^|^|^|^\\ \\^|^|^|^/ /^|^|^|^|^\\ \\^|^|^|^|^|^|^|^|^|^|^|^|");
+        System.out.println("| | | | | | | | | | | | |\\ \\| | |/ /| | | | | | \\ \\ | | | | | | | | | | |");
+        System.out.println("########################/ /######\\ \\###########/ /#######################");
+        System.out.println("| | | | | | | | | | | | \\/| | | | \\/| | | | | |\\/ | | | | | | | | | | | |");
+        System.out.println("|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|_|");
+
+    }
+    public static void printLoserCat() {
+        System.out.println("                        Cat: What a loser!");
+        System.out.println(" |____|____|____|____|____|____|____|____|____|____|____|____|____");
+        System.out.println(" ____|____|____|____|____|____|____|____|____|____|____|____|____|");
+        System.out.println(" __|____|____|____|____|___|_         ____|____|____|____|____|__");
+        System.out.println(" |____|____|____|____|___|    (\\.-./)  _|____|____|____|___|___|_ ");
+        System.out.println("____|____|____|____|____|_  = (^ Y ^) =  _|____|____|____|____|__");
+        System.out.println("|____|____|____|____|____|___ /`---`\\ __|____|____|____|____|____|");
+        System.out.println(" __|____|____|____|____|____|_U___|_U|____|____|____|____|____|_  ");
+        System.out.println(" |____|____|____|____|____|____|____|____|____|____|____|____|____");
+        System.out.println("____|____|____|____|____|____|____|____|____|____|____|____|____|_");
+    }
+    public static void printWinnerCat() {
+        System.out.println("                        Cat: Good job! Finally!");
+        System.out.println(" |____|____|____|____|____|____|____|____|____|____|____|____|____");
+        System.out.println(" ____|____|____|____|____|____|____|____|____|____|____|____|____|");
+        System.out.println(" __|____|____|____|____|___|_         ____|____|____|____|____|__");
+        System.out.println(" |____|____|____|____|___|    (\\.-./)  _|____|____|____|___|___|_ ");
+        System.out.println("____|____|____|____|____|_  = (^ Y ^) =  _|____|____|____|____|__");
+        System.out.println("|____|____|____|____|____|___ /`---`\\ __|____|____|____|____|____|");
+        System.out.println(" __|____|____|____|____|____|_U___|_U|____|____|____|____|____|_  ");
+        System.out.println(" |____|____|____|____|____|____|____|____|____|____|____|____|____");
+        System.out.println("____|____|____|____|____|____|____|____|____|____|____|____|____|_");
+    }
+    public static void printInstructions() {
+        System.out.println("    _                ___       _.--.");
+        System.out.println("    \\`.|\\..----...-'`   `-._.-'_.-'`");
+        System.out.println("    /  ' `         ,       __.--'");
+        System.out.println("    )/' _/     \\   `-_,   /");
+        System.out.println("    `-'\" `\"\\_  ,_.-;_.-\\_ ',  ");
+        System.out.println("        _.-'_./   {_.'   ; /");
+        System.out.println("       {_.-``-'         {_/");
+        System.out.println("*****************************************");
+        System.out.println("*  Guess the letter or the entire word  *");
+        System.out.println("*****************************************");
     }
 }
